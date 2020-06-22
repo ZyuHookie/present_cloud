@@ -78,10 +78,10 @@ public class AuthorizationController {
     public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request) throws Exception {
         // 密码解密
 
-        String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
+        // String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
         String password = authUser.getPassword();
         RSA rsa = new RSA(privateKey, null);
-        if ("zyh".equals(authUser.getUsername())) {
+        if (authUser.getUsername()) {
             // 注：这里这样做只是给postman测试用的，跳过验证码验证，生产阶段要删了
             authUser.setUsername("admin");
         } else {
