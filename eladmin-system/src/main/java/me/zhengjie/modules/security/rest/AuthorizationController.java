@@ -77,27 +77,18 @@ public class AuthorizationController {
     @PostMapping(value = "/login")
     public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDto authUser, HttpServletRequest request) throws Exception {
         // 密码解密
-
-        // String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
-        String password = authUser.getPassword();
-        RSA rsa = new RSA(privateKey, null);
-        if (authUser.getUsername()) {
-            // 注：这里这样做只是给postman测试用的，跳过验证码验证，生产阶段要删了
-            authUser.setUsername("admin");
-        } else {
-            // String password
-            password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
-            // 查询验证码
-            String code = (String) redisUtils.get(authUser.getUuid());
-            // 清除验证码
-            redisUtils.del(authUser.getUuid());
-            if (StringUtils.isBlank(code)) {
-                throw new BadRequestException("验证码不存在或已过期");
-            }
-            if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
-                throw new BadRequestException("验证码错误");
-            }
+        String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
+        // 验证码部分已经注释 前端发送password是已经在前端加密过的  故postman测试要拿加密过的值
+        /*// 查询验证码
+        String code = (String) redisUtils.get(authUser.getUuid());
+        // 清除验证码
+        redisUtils.del(authUser.getUuid());
+        if (StringUtils.isBlank(code)) {
+            throw new BadRequestException("验证码不存在或已过期");
         }
+        if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
+            throw new BadRequestException("验证码错误");
+        }*/
         //这里的authentication是待认证，其principal为账号，credentials为密码
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);
