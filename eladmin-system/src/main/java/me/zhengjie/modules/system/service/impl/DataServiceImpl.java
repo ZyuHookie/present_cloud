@@ -88,4 +88,19 @@ public class DataServiceImpl implements DataService {
         }
         return deptIds;
     }
+
+    public List<Long> getDeptChildren(List<Dept> deptList) {
+        List<Long> list = new ArrayList<>();
+        deptList.forEach(dept -> {
+                    if (dept!=null && dept.getEnabled()){
+                        List<Dept> depts = deptService.findByPid(dept.getId());
+                        if(depts.size() != 0){
+                            list.addAll(getDeptChildren(depts));
+                        }
+                        list.add(dept.getId());
+                    }
+                }
+        );
+        return list;
+    }
 }

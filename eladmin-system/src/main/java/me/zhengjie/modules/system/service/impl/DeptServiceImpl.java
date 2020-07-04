@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.modules.study.repository.CourseRepository;
 import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.modules.system.repository.RoleRepository;
@@ -40,6 +41,7 @@ public class DeptServiceImpl implements DeptService {
     private final UserRepository userRepository;
     private final RedisUtils redisUtils;
     private final RoleRepository roleRepository;
+    private final CourseRepository courseRepository;
 
     @Override
     public List<DeptDto> queryAll(DeptQueryCriteria criteria, Boolean isQuery) throws Exception {
@@ -231,6 +233,9 @@ public class DeptServiceImpl implements DeptService {
         }
         if(roleRepository.countByDepts(deptIds) > 0){
             throw new BadRequestException("所选部门存在角色关联，请解除后再试！");
+        }
+        if(courseRepository.countByDepts(deptIds) > 0){
+            throw new BadRequestException("所选部门存在课程关联，请解除后再试！");
         }
     }
 

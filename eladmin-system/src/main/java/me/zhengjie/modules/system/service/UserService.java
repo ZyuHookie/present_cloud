@@ -101,6 +101,13 @@ public interface UserService {
     List<UserDto> queryAll(UserQueryCriteria criteria);
 
     /**
+     * 按类型查询全部
+     * @param criteria 类型
+     * @return /
+     */
+    List<UserDto> findByType(String type, Pageable pageable);
+
+    /**
      * 导出数据
      * @param queryAll 待导出的数据
      * @param response /
@@ -125,8 +132,13 @@ public interface UserService {
      * @param phone
      * @return
      */
-//    Boolean checkRegister(String phone);
+    Boolean checkRegister(String phone);
 
+    /**
+     * 通过手机号或邮箱查询
+     * @param count
+     * @return
+     */
     UserDto findByPhoneOrEmail(String count);
 
     void updatePassByPhone(String phone, String encryptPassword);

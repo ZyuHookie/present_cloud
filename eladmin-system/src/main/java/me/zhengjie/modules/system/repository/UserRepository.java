@@ -63,6 +63,15 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     void updatePassByPhone(String phone, String pass, Date lastPasswordResetTime);
 
     /**
+     * 根据类型查询用户
+     * @param type /
+     * @return /
+     */
+    @Query(value = "SELECT u.* FROM sys_user u WHERE" +
+            " u.type =  ?1", nativeQuery = true)
+    List<User> findByType(String type);
+
+    /**
      * 根据角色查询用户
      * @param roleId /
      * @return /

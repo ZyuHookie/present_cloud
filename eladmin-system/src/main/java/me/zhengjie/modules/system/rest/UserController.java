@@ -85,6 +85,16 @@ public class UserController {
         return new ResponseEntity<>(PageUtil.toPage(null,0),HttpStatus.OK);
     }
 
+    @AnonymousAccess
+    @Log("查询用户")
+    @ApiOperation("按类型查询用户")
+    @GetMapping(value = "/userByType")
+//    @PreAuthorize("@el.check('user:list')")
+    public ResponseEntity<Object> queryByType(String type, Pageable pageable){
+
+        return new ResponseEntity<>(userService.findByType(type,pageable),HttpStatus.OK);
+    }
+
     @Log("新增用户")
     @ApiOperation("新增用户")
     @PostMapping

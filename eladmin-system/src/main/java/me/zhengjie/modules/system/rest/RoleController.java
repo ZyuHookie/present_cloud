@@ -1,4 +1,3 @@
-
 package me.zhengjie.modules.system.rest;
 
 import cn.hutool.core.lang.Dict;

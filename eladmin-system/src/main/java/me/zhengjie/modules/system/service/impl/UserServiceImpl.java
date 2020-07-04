@@ -3,6 +3,7 @@ package me.zhengjie.modules.system.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.config.FileProperties;
+import me.zhengjie.modules.study.repository.StudentRepository;
 import me.zhengjie.modules.system.domain.User;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.exception.EntityNotFoundException;
@@ -26,8 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
-//import me.zhengjie.modules.study.domain.Student;
-//import me.zhengjie.modules.study.repository.StudentRepository;
 
 
 @Service
@@ -39,7 +38,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final FileProperties properties;
     private final RedisUtils redisUtils;
-//    private final StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
 
     @Override
     public Object queryAll(UserQueryCriteria criteria, Pageable pageable) {
@@ -50,6 +49,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> queryAll(UserQueryCriteria criteria) {
         List<User> users = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root, criteria, criteriaBuilder));
+        return userMapper.toDto(users);
+    }
+
+    @Override
+    public List<UserDto> findByType(String type, Pageable pageable) {
+        List<User> users = userRepository.findByType(type) ;
         return userMapper.toDto(users);
     }
 
@@ -135,7 +140,16 @@ public class UserServiceImpl implements UserService {
     @Override
     @Cacheable(key = "'username:' + #p0")
     public UserDto findByName(String userName) {
-        User user = userRepository.findByUsername(userName);
+        //User user = userRepository.findByUsername(userName);
+        User user;
+        if(ValidationUtil.isEmail(userName)){
+            user = userRepository.findByEmail(userName);
+        } else {
+            user = userRepository.findByUsername(userName);
+            if (user == null) {
+                user = userRepository.findByPhone(userName);
+            }
+        }
         if (user == null) {
             throw new EntityNotFoundException(User.class, "name", userName);
         } else {
@@ -223,13 +237,14 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    /*@Override
+    // 检查手机号是否已经注册
+    @Override
     public Boolean checkRegister(String phone) {
         if (userRepository.findByPhone(phone) != null || studentRepository.findByPhone(phone) != null) {
             return false;
         }
         return true;
-    }*/
+    }
 
     // 根据电话或邮箱查询用户
     @Override

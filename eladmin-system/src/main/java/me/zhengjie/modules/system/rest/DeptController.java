@@ -56,7 +56,7 @@ public class DeptController {
         return new ResponseEntity<>(deptService.buildTree(new ArrayList<>(deptDtos)),HttpStatus.OK);
     }
 
-    //查询所有部门，不做数据权限
+    @ApiOperation("查询部门:查询所有部门，不做数据权限")
     @GetMapping(value = "/all")
     @PreAuthorize("@el.check('course:list','student:list','user:list','dept:list')")
     public ResponseEntity<Object> getAllDepts(DeptQueryCriteria criteria) throws Exception {
@@ -98,7 +98,7 @@ public class DeptController {
                 deptDtos = deptService.getDeleteDepts(deptList, deptDtos);
             }
         }
-        // 验证是否被角色或用户关联
+        // 验证是否被角色或用户或课程关联  部门即院校与三者有外键约束重写了verification方法
         deptService.verification(deptDtos);
         deptService.delete(deptDtos);
         return new ResponseEntity<>(HttpStatus.OK);
