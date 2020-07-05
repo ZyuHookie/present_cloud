@@ -18,12 +18,14 @@ package me.zhengjie.service.impl;
 import cn.hutool.extra.mail.Mail;
 import cn.hutool.extra.mail.MailAccount;
 import lombok.RequiredArgsConstructor;
+import me.zhengjie.config.EmailConfigProperties;
 import me.zhengjie.domain.EmailConfig;
 import me.zhengjie.domain.vo.EmailVo;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.repository.EmailRepository;
 import me.zhengjie.service.EmailService;
 import me.zhengjie.utils.EncryptUtils;
+import me.zhengjie.utils.SpringContextHolder;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -83,6 +85,38 @@ public class EmailServiceImpl implements EmailService {
         account.setSslEnable(true);
         // 使用STARTTLS安全连接
         account.setStarttlsEnable(true);
+        String content = emailVo.getContent();
+        // 发送
+        try {
+            int size = emailVo.getTos().size();
+            Mail.create(account)
+                    .setTos(emailVo.getTos().toArray(new String[size]))
+                    .setTitle(emailVo.getSubject())
+                    .setContent(content)
+                    .setHtml(true)
+                    //关闭session
+                    .setUseGlobalSession(false)
+                    .send();
+        }catch (Exception e){
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    /**
+     * 从application.yml中直接获取邮箱配置，而不是从数据库获取
+     * */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void send(EmailVo emailVo){
+        EmailConfigProperties properties = SpringContextHolder.getBean(EmailConfigProperties.class);
+        MailAccount account = new MailAccount();
+        account.setHost(properties.getHost());
+        account.setPort(Integer.parseInt(properties.getPort()));
+        account.setAuth(true);
+        account.setPass(properties.getPass());
+        account.setFrom(properties.getUser()+"<"+properties.getFromUser()+">");
+        // ssl方式发送
+        account.setSslEnable(true);
         String content = emailVo.getContent();
         // 发送
         try {

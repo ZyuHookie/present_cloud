@@ -46,5 +46,14 @@ public interface EmailService {
      * @param emailConfig 邮件配置
      * @throws Exception /
      */
+    @Async
     void send(EmailVo emailVo, EmailConfig emailConfig);
+
+    /**
+     * 发送邮件 邮件配置从application中获取
+     * @param emailVo 邮件发送的内容
+     * @throws Exception /
+     */
+    @Async
+    void send(EmailVo emailVo);
 }

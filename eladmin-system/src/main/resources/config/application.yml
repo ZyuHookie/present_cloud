@@ -61,3 +61,10 @@ rsa:
 # sm.ms 图床的 token
 smms:
   token: 1oOP3ykFDI0K6ifmtvU7c8Y1eTWZSlyl
+
+email:
+  host: smtp.163.com
+  pass: GLKTJULVSQVMHBVE
+  port: 465
+  fromUser: 156923478@163.com
+  user: 到云签到

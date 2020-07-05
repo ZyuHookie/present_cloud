@@ -13,8 +13,8 @@ public interface SignHistoryRepository extends JpaRepository<SignHistory, Long>,
 
     List<SignHistory> findByCourseIdOrderByCreateTimeDesc(Long id);
 
-    @Query(value = "select count(*) from sign_history where course_id = ?1",nativeQuery = true)
+    @Query(value = "select count(*) where course_id = ?1",nativeQuery = true)
     int getSignCountByCourseId(Long id);
 
-    int countByCourseId(Long id);;
+    int countByCourseId(Long id);
 }

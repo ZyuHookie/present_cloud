@@ -57,7 +57,7 @@ public class EmailController {
     @PostMapping
     @ApiOperation("发送邮件")
     public ResponseEntity<Object> sendEmail(@Validated @RequestBody EmailVo emailVo){
-        emailService.send(emailVo,emailService.find());
+        emailService.send(emailVo);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

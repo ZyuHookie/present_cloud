@@ -1,4 +1,3 @@
-
 package me.zhengjie.modules.system.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,10 +14,7 @@ import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Set;
 
-/**
- * @author Zheng Jie
- * @date 2018-12-17
- */
+
 @Entity
 @Getter
 @Setter

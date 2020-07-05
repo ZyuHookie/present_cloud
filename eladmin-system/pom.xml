@@ -68,6 +68,13 @@
             <artifactId>quartz</artifactId>
         </dependency>
 
+        <!-- configuration 配置 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!-- linux的管理 -->
 		<dependency>
 			<groupId>ch.ethz.ganymed</groupId>
